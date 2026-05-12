@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Smart Agriculture Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="auth-bg min-h-screen text-white">
+  <main class="min-h-screen grid place-items-center px-4">
+    <form method="post" class="glass auth-card w-full max-w-md p-8 reveal">
+      <div class="mb-8">
+        <p class="text-emerald-300 uppercase text-xs tracking-[0.35em]">Crop Intelligence SaaS</p>
+        <h1 class="text-3xl font-black mt-3">AI Smart Agriculture</h1>
+        <p class="text-slate-300 mt-2">Real-time farm monitoring, ML predictions, and farmer intelligence.</p>
+      </div>
+      {% if error %}
+        <div class="mb-4 rounded-lg border border-red-400/40 bg-red-500/15 px-4 py-3 text-sm">{{ error }}</div>
+      {% endif %}
+      <label class="field-label">Email</label>
+      <input class="input" type="email" name="email" value="admin@agri.ai" required>
+      <label class="field-label mt-4">Password</label>
+      <input class="input" type="password" name="password" value="admin123" required>
+      <button class="primary-btn w-full mt-6" type="submit">Launch Command Center</button>
+      <p class="text-xs text-slate-400 mt-5">Default: admin@agri.ai / admin123</p>
+    </form>
+  </main>
+</body>
+</html>

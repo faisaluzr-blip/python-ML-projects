@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Smart Agriculture Monitoring and Crop Intelligence System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="app-bg text-slate-100">
+  <div id="loader" class="loader"><div class="pulse-ring"></div><span>Calibrating AI farm sensors</span></div>
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">AI</div>
+      <div><b>AgriNova</b><small>Crop Intelligence</small></div>
+    </div>
+    <nav>
+      <button data-section="dashboard" class="nav-link active">Dashboard</button>
+      <button data-section="disease" class="nav-link">Disease AI</button>
+      <button data-section="weather" class="nav-link">Weather</button>
+      <button data-section="soil" class="nav-link">Soil Lab</button>
+      <button data-section="crop" class="nav-link">Crop AI</button>
+      <button data-section="irrigation" class="nav-link">Irrigation</button>
+      <button data-section="market" class="nav-link">Market</button>
+      <button data-section="assistant" class="nav-link">Assistant</button>
+      <button data-section="admin" class="nav-link">Admin</button>
+    </nav>
+    <a href="/logout" class="logout">Logout</a>
+  </aside>
+
+  <main class="main-shell">
+    <header class="topbar glass">
+      <button id="menuBtn" class="icon-btn">☰</button>
+      <div>
+        <h1>AI Smart Agriculture Monitoring and Crop Intelligence System</h1>
+        <p>{{ user.farm_name }} · live operations center</p>
+      </div>
+      <div class="top-actions">
+        <button id="themeBtn" class="icon-btn" title="Toggle theme">◐</button>
+        <button id="notifyBtn" class="icon-btn" title="Notifications">🔔<span id="alertDot"></span></button>
+        <a class="mini-btn" href="/api/export/pdf">PDF</a>
+        <a class="mini-btn" href="/api/export/csv">CSV</a>
+      </div>
+    </header>
+
+    <section id="dashboard" class="page-section active">
+      <div class="hero-panel glass reveal">
+        <div>
+          <p class="eyebrow">Real-time AI field intelligence</p>
+          <h2>Live farm status, predictions, risks, and automation in one command center.</h2>
+        </div>
+        <div class="hero-orbit"><span></span><span></span><span></span></div>
+      </div>
+      <div class="metric-grid">
+        <button class="metric-card glass" data-focus="moisture"><span>Soil Moisture</span><strong id="moistureVal">--%</strong><em>Live sensor</em></button>
+        <button class="metric-card glass" data-focus="health"><span>Crop Health</span><strong id="healthVal">--%</strong><em>AI index</em></button>
+        <button class="metric-card glass" data-focus="water"><span>Water Usage</span><strong id="waterVal">-- L</strong><em>Today</em></button>
+        <button class="metric-card glass" data-focus="yield"><span>Yield Forecast</span><strong id="yieldVal">-- t/ha</strong><em>ML estimate</em></button>
+      </div>
+      <div class="grid xl:grid-cols-3 gap-5">
+        <div class="glass panel xl:col-span-2"><div class="panel-head"><h3>Sensor Analytics</h3><select id="chartFilter" class="select"><option value="all">All metrics</option><option value="moisture">Moisture only</option><option value="climate">Climate</option></select></div><canvas id="sensorChart"></canvas></div>
+        <div class="glass panel"><div class="panel-head"><h3>Farm Map</h3><span class="live-pill">Live</span></div><div class="map"><button data-zone="A">Zone A</button><button data-zone="B">Zone B</button><button data-zone="C">Zone C</button><button data-zone="D">Zone D</button></div><p id="zoneInfo" class="hint">Select a zone to inspect soil and irrigation status.</p></div>
+      </div>
+    </section>
+
+    <section id="disease" class="page-section">
+      <div class="module-grid">
+        <div class="glass panel">
+          <h3>Crop Disease Detection</h3>
+          <label id="dropZone" class="drop-zone">
+            <input id="leafInput" type="file" accept="image/*" hidden>
+            <span>Drag leaf image here or click to scan</span>
+          </label>
+          <div class="preview-wrap"><img id="leafPreview" alt=""><div id="scanLine"></div></div>
+          <button id="scanBtn" class="primary-btn">Run AI Leaf Scan</button>
+        </div>
+        <div class="glass panel result-panel" id="diseaseResult"><h3>AI Result</h3><p class="hint">Upload a crop image to see disease class, confidence, treatment, and health comparison.</p></div>
+      </div>
+    </section>
+
+    <section id="weather" class="page-section">
+      <div class="glass panel">
+        <div class="panel-head"><h3>Weather Prediction System</h3><div class="inline-controls"><input id="cityInput" class="input compact" value="Ludhiana"><button id="weatherBtn" class="primary-btn small">Update</button></div></div>
+        <div id="weatherCards" class="weather-grid"></div>
+        <canvas id="weatherChart"></canvas>
+      </div>
+    </section>
+
+    <section id="soil" class="page-section">
+      <div class="module-grid">
+        <form id="soilForm" class="glass panel form-grid">
+          <h3>Soil Quality Analysis</h3>
+          <input class="input" name="n" value="72" placeholder="Nitrogen">
+          <input class="input" name="p" value="46" placeholder="Phosphorus">
+          <input class="input" name="k" value="88" placeholder="Potassium">
+          <input class="input" name="ph" value="6.7" placeholder="pH">
+          <input class="input" name="organic" value="2.8" placeholder="Organic matter">
+          <input class="input" name="moisture" value="54" placeholder="Moisture">
+          <button class="primary-btn">Analyze Soil</button>
+        </form>
+        <div id="soilResult" class="glass panel"></div>
+      </div>
+    </section>
+
+    <section id="crop" class="page-section">
+      <div class="glass panel">
+        <h3>AI Crop Recommendation System</h3>
+        <form id="cropForm" class="responsive-form">
+          <select class="select" name="soil_type"><option>Loamy</option><option>Clay</option><option>Sandy</option><option>Black</option><option>Alluvial</option><option>Red</option></select>
+          <input class="input" name="temperature" value="28" placeholder="Temperature">
+          <input class="input" name="humidity" value="68" placeholder="Humidity">
+          <input class="input" name="rainfall" value="150" placeholder="Rainfall">
+          <input class="input" name="ph" value="6.5" placeholder="pH">
+          <input class="input" name="water" value="62" placeholder="Water availability">
+          <button class="primary-btn">Recommend Crops</button>
+        </form>
+        <div id="cropCards" class="crop-cards"></div>
+      </div>
+    </section>
+
+    <section id="irrigation" class="page-section">
+      <div class="module-grid">
+        <div class="glass panel">
+          <h3>Smart Irrigation Management</h3>
+          <div class="meter"><div id="moistureNeedle"></div><strong id="meterText">--%</strong></div>
+          <div class="responsive-form">
+            <input id="irrigationCrop" class="input" value="Wheat">
+            <input id="irrigationAcreage" class="input" value="5">
+            <button id="irrigationBtn" class="primary-btn">Calculate Water</button>
+          </div>
+          <div class="toggle-row"><span>Auto mode</span><label class="switch"><input id="autoMode" type="checkbox" checked><b></b></label></div>
+        </div>
+        <div id="irrigationResult" class="glass panel"></div>
+      </div>
+    </section>
+
+    <section id="market" class="page-section">
+      <div class="glass panel">
+        <h3>Market Price Prediction</h3>
+        <form id="marketForm" class="responsive-form">
+          <select class="select" name="crop"><option>Rice</option><option>Wheat</option><option>Maize</option><option>Cotton</option><option>Tomato</option><option>Potato</option><option>Sugarcane</option><option>Soybean</option></select>
+          <input class="input" name="demand" value="72" placeholder="Demand index">
+          <input class="input" name="supply" value="55" placeholder="Supply index">
+          <input class="input" name="fuel" value="94" placeholder="Fuel cost index">
+          <input class="input" name="quantity" value="30" placeholder="Quantity quintal">
+          <button class="primary-btn">Predict Price</button>
+        </form>
+        <div id="priceSummary" class="summary-strip"></div>
+        <canvas id="marketChart"></canvas>
+      </div>
+    </section>
+
+    <section id="assistant" class="page-section">
+      <div class="glass panel chat-panel">
+        <div class="panel-head"><h3>Farmer Assistant Chatbot</h3><select id="chatLang" class="select"><option>English</option><option>Hindi</option><option>Bengali</option><option>Marathi</option></select></div>
+        <div id="chatLog" class="chat-log"></div>
+        <div class="chat-input"><input id="chatText" class="input" placeholder="Ask about disease, NPK, irrigation, price..."><button id="voiceBtn" class="icon-btn">🎙</button><button id="chatBtn" class="primary-btn small">Send</button></div>
+      </div>
+    </section>
+
+    <section id="admin" class="page-section">
+      <div class="glass panel">
+        <div class="panel-head"><h3>Admin Panel</h3><button id="adminRefresh" class="primary-btn small">Refresh</button></div>
+        <div id="adminStats" class="metric-grid compact-grid"></div>
+        <div id="farmersTable" class="table-wrap"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="notifications" class="notification-panel glass"><h3>Live Alerts</h3><div id="alertList"></div></div>
+  <div id="toast"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
