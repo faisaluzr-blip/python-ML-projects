@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finance Intelligence Platform</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="ambient"></div>
+  <main class="shell">
+    <section class="auth-panel" id="authPanel">
+      <div class="brand">
+        <span class="brand-mark">FI</span>
+        <div>
+          <h1>Finance Intelligence</h1>
+          <p>AI-powered expense intelligence, forecasting, and automation.</p>
+        </div>
+      </div>
+      <div class="auth-grid">
+        <form class="glass form" id="loginForm">
+          <h2>Secure Login</h2>
+          <input type="email" name="email" value="demo@finance.ai" placeholder="Email" required>
+          <input type="password" name="password" value="Demo@12345" placeholder="Password" required>
+          <button class="primary" type="submit">Login</button>
+          <small>Demo: demo@finance.ai / Demo@12345</small>
+        </form>
+        <form class="glass form" id="signupForm">
+          <h2>Create Account</h2>
+          <input name="name" placeholder="Full name" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" minlength="8" required>
+          <select name="currency">
+            <option>USD</option><option>INR</option><option>EUR</option><option>GBP</option><option>AED</option><option>JPY</option>
+          </select>
+          <button class="ghost" type="submit">Sign Up</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="app-view hidden" id="appView">
+      <aside class="sidebar glass">
+        <div class="brand mini"><span class="brand-mark">FI</span><strong>Finance AI</strong></div>
+        <nav>
+          <button data-tab="dashboard" class="active">Dashboard</button>
+          <button data-tab="transactions">Transactions</button>
+          <button data-tab="automation">Automation</button>
+          <button data-tab="assistant">AI Assistant</button>
+          <button data-tab="admin">Admin</button>
+        </nav>
+        <button id="themeToggle" class="ghost small">Toggle Theme</button>
+        <button id="logoutBtn" class="danger small">Logout</button>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar glass">
+          <div>
+            <p class="eyebrow">Real-time financial command center</p>
+            <h2 id="welcome">Welcome</h2>
+          </div>
+          <div class="status-pill"><span></span> Live AI Analytics</div>
+        </header>
+
+        <section class="tab active" id="dashboard">
+          <div class="metric-grid">
+            <article class="metric glass"><span>Income</span><strong id="income">$0</strong><canvas class="spark" id="incomeSpark"></canvas></article>
+            <article class="metric glass"><span>Expenses</span><strong id="expense">$0</strong><canvas class="spark" id="expenseSpark"></canvas></article>
+            <article class="metric glass"><span>Net Worth Flow</span><strong id="net">$0</strong><canvas class="spark" id="netSpark"></canvas></article>
+            <article class="metric glass health"><span>Health Score</span><strong id="healthScore">0</strong><div class="ring"><i id="healthRing"></i></div></article>
+          </div>
+          <div class="dash-grid">
+            <article class="panel glass wide"><h3>Animated Cashflow Intelligence</h3><canvas id="cashflowChart" height="260"></canvas></article>
+            <article class="panel glass"><h3>Expense Forecast</h3><canvas id="forecastChart" height="260"></canvas></article>
+            <article class="panel glass"><h3>Top Categories</h3><div id="categoryBars" class="bars"></div></article>
+            <article class="panel glass"><h3>Smart Alerts</h3><div id="alerts" class="feed"></div></article>
+            <article class="panel glass wide"><h3>Fraud & Anomaly Radar</h3><div id="anomalies" class="table"></div></article>
+          </div>
+        </section>
+
+        <section class="tab" id="transactions">
+          <div class="two-col">
+            <form class="panel glass form" id="txForm">
+              <h3>Smart Entry</h3>
+              <select name="kind"><option value="expense">Expense</option><option value="income">Income</option></select>
+              <input name="amount" type="number" step="0.01" placeholder="Amount" required>
+              <input name="merchant" placeholder="Merchant">
+              <input name="description" placeholder="Description">
+              <input name="category" placeholder="Category (blank for AI)">
+              <input name="occurred_on" type="date" required>
+              <button class="primary" type="submit">Add Transaction</button>
+            </form>
+            <div class="panel glass">
+              <h3>Receipt OCR + Voice</h3>
+              <input id="receiptFile" type="file" accept="image/*,.txt,.pdf">
+              <button class="ghost" id="scanBtn">Scan Receipt</button>
+              <div class="voice-row">
+                <input id="voiceText" placeholder="Spent 42 at Orbit Cafe">
+                <button class="ghost" id="micBtn">Voice</button>
+                <button class="primary" id="voiceAddBtn">Add</button>
+              </div>
+              <pre id="scanResult"></pre>
+            </div>
+          </div>
+          <article class="panel glass"><h3>Transaction Ledger</h3><div id="txTable" class="table"></div></article>
+        </section>
+
+        <section class="tab" id="automation">
+          <div class="three-col">
+            <form class="panel glass form" id="budgetForm"><h3>Budget Planner</h3><input name="category" placeholder="Category"><input name="limit_amount" type="number" placeholder="Monthly limit"><button class="primary">Save Budget</button></form>
+            <form class="panel glass form" id="goalForm"><h3>Savings Goal</h3><input name="name" placeholder="Goal name"><input name="target_amount" type="number" placeholder="Target"><input name="saved_amount" type="number" placeholder="Saved"><input name="deadline" type="date"><button class="primary">Track Goal</button></form>
+            <form class="panel glass form" id="reminderForm"><h3>Payment Reminder</h3><input name="name" placeholder="Subscription"><input name="amount" type="number" placeholder="Amount"><input name="due_day" type="number" min="1" max="31" placeholder="Due day"><button class="primary">Add Reminder</button></form>
+          </div>
+          <div class="dash-grid">
+            <article class="panel glass"><h3>Budgets</h3><div id="budgetList" class="feed"></div></article>
+            <article class="panel glass"><h3>Goals</h3><div id="goalList" class="feed"></div></article>
+            <article class="panel glass"><h3>Reminders</h3><div id="reminderList" class="feed"></div></article>
+          </div>
+          <article class="panel glass"><h3>Reports</h3><div class="actions"><button class="ghost" data-export="csv">Export CSV</button><button class="ghost" data-export="excel">Export Excel</button><button class="ghost" data-export="pdf">Export PDF</button></div></article>
+        </section>
+
+        <section class="tab" id="assistant">
+          <article class="panel glass chat">
+            <h3>AI Financial Assistant</h3>
+            <div id="chatLog" class="chat-log"></div>
+            <form id="chatForm" class="chat-form"><input name="message" placeholder="Ask about savings, budgets, fraud, or forecasting"><button class="primary">Ask</button></form>
+          </article>
+        </section>
+
+        <section class="tab" id="admin">
+          <article class="panel glass"><h3>Admin Overview</h3><div id="adminStats" class="metric-grid compact"></div></article>
+        </section>
+      </section>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
